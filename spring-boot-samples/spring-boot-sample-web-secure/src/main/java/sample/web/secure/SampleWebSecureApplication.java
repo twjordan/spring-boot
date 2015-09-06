@@ -29,11 +29,13 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+@EnableRedisHttpSession
 @EnableAutoConfiguration
 @ComponentScan
 @Controller
@@ -51,7 +53,23 @@ public class SampleWebSecureApplication extends WebMvcConfigurerAdapter {
 	public String foo() {
 		throw new RuntimeException("Expected exception in controller");
 	}
+	
+	@RequestMapping("/api/v1/foo")
+	public String foov1(Map<String, Object> model) {
+		model.put("message", "Hello World");
+		model.put("title", "Hello Home");
+		model.put("date", new Date());
+		return "home";
+	}
 
+	
+	@RequestMapping("/api/v3/foo")
+	public String foov2(Map<String, Object> model) {
+		model.put("message", "Hello World");
+		model.put("title", "Hello Home");
+		model.put("date", new Date());
+		return "home";
+	}
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/login").setViewName("login");
